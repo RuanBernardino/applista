@@ -1,19 +1,18 @@
-import 'dart:convert';
-import 'dart:io';
+
+// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 
 void main() {
-  runApp(MyApp());
+ runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-const MyApp({super.key});
+ const MyApp({super.key});
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
+ // This widget is the root of your application.
+ @override
+ Widget build(BuildContext context) {
     return MaterialApp(
       title: 'LISTA',
       theme: ThemeData(
@@ -21,28 +20,31 @@ const MyApp({super.key});
       ),
       home: ShoppingListScreen(),
     );
-  }
+ }
 }
 
 class ShoppingListScreen extends StatefulWidget {
-  @override
-  _ShoppingListScreenState createState() => _ShoppingListScreenState();
+ @override
+ // ignore: library_private_types_in_public_api
+ _ShoppingListScreenState createState() => _ShoppingListScreenState();
 }
 
 class _ShoppingListScreenState extends State<ShoppingListScreen> {
-  final List<ShoppingItem> _items = [];
+ final List<ShoppingItem> _items = [];
 
-  Future<void> _addItem(String newItemName) async {
+ Future<void> _addItem(String newItemName) async {
     setState(() {
       _items.add(ShoppingItem(itemName: newItemName));
     });
-  }
+ }
 
-  @override
-  Widget build(BuildContext context) {
+ @override
+ Widget build(BuildContext context) {
+  String? newItemName;
+  int? newQuantProd;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Shopping List'),
+        title: Text('Lista'),
       ),
       body: ListView.builder(
         itemCount: _items.length,
@@ -54,21 +56,21 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                  icon: Icon(Icons.remove),
-                  onPressed: () {
+                 icon: Icon(Icons.remove),
+                 onPressed: () {
                     setState(() {
                       item.decrementCount();
                     });
-                  },
+                 },
                 ),
                 Text('${item.count}'),
                 IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
+                 icon: Icon(Icons.add),
+                 onPressed: () {
                     setState(() {
                       item.incrementCount();
                     });
-                  },
+                 },
                 ),
               ],
             ),
@@ -77,25 +79,35 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          String? newItemName = await showDialog<String>(
+           newItemName = await showDialog<String>(
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: Text('Add a new item'),
-                content: TextField(
-                  autofocus: true,
-                  decoration: InputDecoration(hintText: 'Enter item name'),
-                  onChanged: (value) => newItemName = value,
-                ),
+      title: Text('Adicionar novo item'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            autofocus: true,
+            decoration: InputDecoration(hintText: 'Nome do produto'),
+            onChanged: (value) => newItemName = value,
+          ),
+          TextField(
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(hintText: 'Quantidade do produto'),
+            onChanged: (value) => newQuantProd = int.tryParse(value),
+          ),
+        ],
+      ),
                 actions: [
-                  TextButton(
+                 TextButton(
                     onPressed: () => Navigator.pop(context),
                     child: Text('Cancel'),
-                  ),
-                  TextButton(
+                 ),
+                 TextButton(
                     onPressed: () => Navigator.pop(context, newItemName),
                     child: Text('Add'),
-                  ),
+                 ),
                 ],
               );
             },
@@ -108,22 +120,22 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
         child: Icon(Icons.add),
       ),
     );
-  }
+ }
 }
 
 class ShoppingItem {
-  final String itemName;
-  int _count;
+ final String itemName;
+ int _count;
 
-  ShoppingItem({required this.itemName, int count = 0}) : _count = count;
+ ShoppingItem({required this.itemName, int count = 0}) : _count = count;
 
-  int get count => _count;
+ int get count => _count;
 
-  void incrementCount() {
+ void incrementCount() {
     _count++;
-  }
+ }
 
-  void decrementCount() {
+ void decrementCount() {
     if (_count > 0) _count--;
-  }
+ }
 }
