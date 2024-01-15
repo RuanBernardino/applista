@@ -101,8 +101,8 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
             },
           );
 
-          if (newItemName != null && newItemName.isNotEmpty) {
-            _addItem(newItemName);
+          if (newItemName != null) {
+            _addItem(newItemName!);
           }
         },
         child: Icon(Icons.add),
